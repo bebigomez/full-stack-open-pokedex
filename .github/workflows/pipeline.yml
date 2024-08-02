@@ -32,19 +32,6 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5001
-
-      - name: Deployment approval
-        if: github.ref == 'refs/heads/main'
-        run: echo "Deployment needs to be manually approved"
-
-  deploy:
-    runs-on: ubuntu-20.04
-    needs: simple_deployment_pipeline
-    environment:
-      name: production
-    steps:
+      
       - name: Trigger deployment on render
         run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-
-      # - name: Trigger deployment on render
-      #   run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
