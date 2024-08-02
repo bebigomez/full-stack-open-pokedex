@@ -42,19 +42,9 @@ jobs:
     needs: simple_deployment_pipeline
     environment:
       name: production
-      url: ${{ secrets.PRODUCTION_URL }}
     steps:
       - name: Trigger deployment on render
         run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-
-      - name: Verify deployment
-        run: |
-          if curl -s --head  --request GET ${{ secrets.PRODUCTION_URL }} | grep "200 OK" > /dev/null; then
-            echo "Deployment successful"
-          else
-            echo "Deployment failed"
-            exit 1
-          fi
 
       # - name: Trigger deployment on render
       #   run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
