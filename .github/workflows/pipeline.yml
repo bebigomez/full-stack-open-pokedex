@@ -42,8 +42,6 @@ jobs:
         
   tag_release:
     needs: [simple_deployment_pipeline]
-    permissions:
-      contents: write
     runs-on: ubuntu-20.04
     steps:
       - name: Bump version and push tag
@@ -52,5 +50,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
-          PATCH_STRING_TOKEN: true
+          DEFAULT_BUMP: patch
           DRY_RUN: true 
