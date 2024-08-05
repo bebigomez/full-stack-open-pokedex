@@ -47,10 +47,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' }}
+        # if: ${{ github.event_name == 'push' }}
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
-          PATCH_STRING_TOKEN: true
+          DEFAULT_BUMP: patch
           DRY_RUN: true 
