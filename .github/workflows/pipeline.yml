@@ -70,7 +70,7 @@ jobs:
 
       - name: build fail
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: ${{ fail() }}
+        if: ${{ failure() }}
         with:
           severity: error
           description: Build failed.
