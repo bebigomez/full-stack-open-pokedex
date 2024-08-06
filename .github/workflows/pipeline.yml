@@ -42,7 +42,24 @@ jobs:
       - name: Trigger deployment on render
         if: ${{ env.CONDITION == 'true' }}
         run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-        
+
+      - name: deployment success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          details: Deployment Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: build fail
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: Build failed.
+          details: commit ${{ github.sha }} from repo ${{ github.repository }} failed. 
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
