@@ -55,3 +55,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
           DEFAULT_BUMP: patch
+
+  discord_notification:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: deployment success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: Deployment Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: build fail
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ fail() }}
+        with:
+          severity: error
+          description: Build failed.
+          details: commit ${{ github.sha }} from repo ${{ github.repository }} failed. 
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
