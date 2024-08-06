@@ -59,7 +59,7 @@ jobs:
           description: Build failed.
           details: commit ${{ github.sha }} from repo ${{ github.repository }} failed. 
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-        
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
