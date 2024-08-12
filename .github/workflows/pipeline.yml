@@ -42,7 +42,23 @@ jobs:
       - name: Trigger deployment on render
         if: ${{ env.CONDITION == 'true' }}
         run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-        
+
+      - name: Notify on Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "Test Succeeded!"}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
+      
+      - name: Build fail
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "Commit ${{ github.sha }} from repo ${{ github.repository }} failed."}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
