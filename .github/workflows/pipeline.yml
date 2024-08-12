@@ -43,22 +43,21 @@ jobs:
         if: ${{ env.CONDITION == 'true' }}
         run: curl https://api.render.com/deploy/${{ secrets.SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
-      - name: deployment success
-        uses: rjstone/discord-webhook-notify@v1
+      - name: Notify on Success
         if: success()
-        with:
-          severity: info
-          details: Deployment Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
-      - name: build fail
-        uses: rjstone/discord-webhook-notify@v1
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "Test Succeeded!"}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
+      
+      - name: Build fail
         if: failure()
-        with:
-          severity: error
-          description: Build failed.
-          details: commit ${{ github.sha }} from repo ${{ github.repository }} failed. 
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "Commit ${{ github.sha }} from repo ${{ github.repository }} failed."}' \
+               ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     needs: [simple_deployment_pipeline]
